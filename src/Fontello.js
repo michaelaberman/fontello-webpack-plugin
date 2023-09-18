@@ -1,7 +1,7 @@
 const _ = require("lodash")
 const path = require("path")
 const stream = require("stream")
-const unzip = require("unzip")
+const unzip = require("unzipper")
 const fetch = require("node-fetch")
 const FormData = require("form-data")
 const { RawSource } = require("webpack-sources")
@@ -39,7 +39,7 @@ class Fontello {
 		}
 		const { host, config } = this.options
 		const body = new FormData()
-		body.append("config", new Buffer(JSON.stringify(config), "utf8"), {
+		body.append("config", Buffer.from(JSON.stringify(config), "utf8"), {
 			filename: "config.json",
 			contentType: "application/json"
 		})

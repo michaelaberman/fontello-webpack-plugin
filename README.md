@@ -1,4 +1,4 @@
-# Fontello Webpack Plugin
+# Fontello Plugin for Webpack 5
 
 Download icon fonts to webpack build folder using [Fontello](http://fontello.com).
 
@@ -7,14 +7,15 @@ Download icon fonts to webpack build folder using [Fontello](http://fontello.com
 ## Install
 
 ```bash
-npm install fontello-webpack-plugin
+npm install fontello-webpack5-plugin html-webpack-plugin
 ```
 
 ## Usage
 
 `/webpack.config.js`
 ```js
-const FontelloPlugin = require("fontello-webpack-plugin")
+const HTMLWebpackPlugin = require("html-webpack-plugin");
+const FontelloPlugin = require("fontello-webpack5-plugin");
 
 module.exports = {
   entry: "index.js",
@@ -23,7 +24,12 @@ module.exports = {
     new FontelloPlugin({
       config: require("./fontello.config.json")
       /* ...options */
-    })
+    }), 
+    new HTMLWebpackPlugin({
+      // The plugin is required for FontelloPlugin, but if you want to suppress its output, uncomment the line below. 
+      // "filename": "/dev/null",
+    }),
+
   ]
 }
 ```

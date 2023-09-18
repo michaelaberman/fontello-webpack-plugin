@@ -1,5 +1,6 @@
 const _ = require("lodash")
 const path = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
 const Chunk = require("webpack/lib/Chunk")
 const config = require("./config")
 const Fontello = require("./Fontello")
@@ -7,7 +8,7 @@ const Css = require("./Css")
 
 // https://github.com/jantimon/html-webpack-plugin/blob/master/index.js#L98
 function getPublicPath(compilation) {
-	let publicPath = compilation.mainTemplate.getPublicPath({ hash: compilation.hash }) || ""
+	let publicPath = compilation.getAssetPath(compilation.outputOptions.publicPath, { hash: compilation.hash }) || ""
 	if(publicPath && publicPath.substr(-1) !== "/") {
 		publicPath += "/"
 	}
@@ -37,7 +38,7 @@ class FontelloPlugin {
 				fontFile(ext)
 			)
 			const addFile = (fileName, source) => {
-				chunk.files.push(fileName)
+				chunk.files.add(fileName)
 				compilation.assets[fileName] = source
 			}
 			fontello.assets()
@@ -48,13 +49,13 @@ class FontelloPlugin {
 					}
 				})
 				.then(() => cb())
-			compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration.tapAsync("FontelloPlugin", (data, cb) => {
+			HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync("FontelloPlugin", (data, cb) => {
 				console.log(getPublicPath(compilation))
 				data.assets.css.push(getPublicPath(compilation) + cssFile)
 				cb(null, data)
 			})
 			compilation.hooks.additionalAssets.tapAsync("FontelloPlugin", cb => {
-				compilation.chunks.push(chunk)
+				compilation.chunks.add(chunk)
 				compilation.namedChunks[this.options.name] = chunk
 				cb()
 			})
