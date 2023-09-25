@@ -49,7 +49,7 @@ class FontelloPlugin {
 					}
 				})
 				.then(() => cb())
-			HtmlWebpackPlugin.getHooks(compilation).beforeEmit.tapAsync("FontelloPlugin", (data, cb) => {
+			HtmlWebpackPlugin.getHooks(compilation).beforeAssetTagGeneration.tapAsync("FontelloPlugin", (data, cb) => {
 				console.log(getPublicPath(compilation))
 				data.assets.css.push(getPublicPath(compilation) + cssFile)
 				cb(null, data)
